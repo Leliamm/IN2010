@@ -9,7 +9,7 @@ public class SearchSortTest {
         int[] B = {23,22, 13, 4, 55,16 , 7, 28, 0};
 
         System.out.println("Binary Search " + search.binarySearch(A, 0));
-        int[] sortBub  = sort.bubbleSort(B);
-        System.out.println("Bubble sort " + Arrays.toString(sortBub));
+        // System.out.println("Bubble sort " + Arrays.toString(sort.bubbleSort(B)));
+        System.out.println("Selection sort " + Arrays.toString(sort.selectionSort(B)));
     }
 }
