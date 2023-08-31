@@ -1,4 +1,5 @@
-public class BinarySearch {
+public class Search {
+
   public boolean binarySearch(int[] input, int lookingFor){
     int low = 0;
     int high = input.length - 1;
@@ -15,4 +16,5 @@ public class BinarySearch {
     }
     return false;
   }  
+
 }
