@@ -5,7 +5,6 @@ public class MaxSum{
             if (input[i] > max)
                 max = input[i];
         }
-
         return max;
     }
 
