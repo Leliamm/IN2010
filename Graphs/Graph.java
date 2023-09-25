@@ -200,22 +200,20 @@ public ArrayList<Node> topSort() throws Exception{
 
 //Topological sorting with DFS
 
-public ArrayList<Node> DFSTopSort(){
+public Stack<Node> DFSTopSort(){
     Stack<Node> stack = new Stack<>();
-    ArrayList<Node> output = new ArrayList<>();
     for(String s : graf.keySet()){
         Node n = graf.get(s);
         if(!n.visited){
             DFSVisitB(n, stack);
         }
     }
-
-    return output;
+    return stack;
 }
 
 public void  DFSVisitB(Node n, Stack <Node> stack){
     n.visited = true;
-    for( Node nb : n.naboer){
+    for(Node nb : n.naboer){
         if(!nb.visited){
             DFSVisitB(nb, stack);
         }

@@ -35,8 +35,6 @@ public class GraphTTest {
         System.out.println("\n---( Calling BFS )---" + BFSFull);
 
         Graph morgen = new Graph(true);
-        // Add edges to 'morgen' graph here
-
         morgen.leggTilKant("A", "D");
         morgen.leggTilKant("A", "C");
         morgen.leggTilKant("C", "H");
@@ -50,8 +48,10 @@ public class GraphTTest {
         // // Call topological sorting here...
 
         morgen.settNoderUbesokt();
-        ArrayList<Node> DFSTopSort  = morgen.DFSTopSort();
+        Stack<Node> DFSTopSort  = morgen.DFSTopSort();
         System.out.println("\n---( Calling DFSTopSort )---" + DFSTopSort);
+
+
 
         // Object of graph is created.
         GraphT<Integer> g = new GraphT<Integer>();
