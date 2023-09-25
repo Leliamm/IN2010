@@ -1,4 +1,4 @@
-public class Node {
+public class Node implements Comparable<Node> {
     int data;
     Node parent;
     Node leftChild;
@@ -11,21 +11,15 @@ public class Node {
         rightChild = null;
     }
 
-    public int findHeight(Node n){
-        int heigth = -1;
-        if(n == null) return heigth;
-        else{
-           int leftHeight = findHeight(n.leftChild);
-            int rightHeight = findHeight(n.rightChild);
-            heigth= 1 + Math.max(leftHeight, rightHeight);
-        }
-        return heigth;
+
+    @Override
+    public int compareTo(Node o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
     }
 
-    public int findDepth(Node n){
-        if (n == null){
-            return -1;
-        }
-        return 1 + findDepth(n.parent); 
+    @Override
+    public String toString(){
+        return ""+this.data;
     }
 }
