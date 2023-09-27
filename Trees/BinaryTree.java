@@ -5,7 +5,8 @@ import java.util.Queue;
 public class BinaryTree {
     Node root;
     int size;
-    int heigth = findHeight(root);
+    int heigthTree = findHeight(root);
+    int heigthNode;
     ArrayList<Node> nodes = new ArrayList<>();
 
     public BinaryTree() {
@@ -17,9 +18,10 @@ public class BinaryTree {
         if (n == null) {
             n = new Node(value);
             n.parent = parent;
+            size++;
         } else if (value < n.data) {
             n.leftChild = insertNode(n, n.leftChild, value);
-        } else {
+        } else if (value > n.data) {
             n.rightChild = insertNode(n, n.rightChild, value);
         }
         return n;
@@ -28,6 +30,7 @@ public class BinaryTree {
     public void insert(int value) {
         if (root == null) {
             root = new Node(value);
+            size++;
         } else {
             insertNode(null, root, value);
         }
@@ -46,21 +49,33 @@ public class BinaryTree {
     }
 
     public Node findMin(Node n) {
-        while (n != null) {
+        while (n.leftChild != null) {
             n = n.leftChild;
         }
+        System.out.println("minst er nå: " + n);
         return n;
     }
 
-    public Node remove(Node n, int value) {
+    public Node removeInt(int i) {
+        if (!contains(root, i))
+            return null;
+        size--;
+        return remove(null, root, i);
+    }
+
+    public Node remove(Node parent, Node n, int value) {
         if (n == null)
             return null;
+        if (size == 0) {
+            root = null;
+            return null;
+        }
         if (value < n.data) {
-            n.leftChild = remove(n.leftChild, value);
+            n.leftChild = remove(n, n.leftChild, value);
             return n;
         }
-        if (value >= n.data) {
-            n.rightChild = remove(n.rightChild, value);
+        if (value > n.data) {
+            n.rightChild = remove(n, n.rightChild, value);
             return n;
         }
 
@@ -71,8 +86,12 @@ public class BinaryTree {
 
         Node min = findMin(n.rightChild);
         n.data = min.data;
-        n.rightChild = remove(n.rightChild, min.data);
+        n.rightChild = remove(n, n.rightChild, min.data);
         return n;
+    }
+
+    public int findSize(){
+        return size;
     }
 
     public static int findHeight(Node n) {
@@ -87,6 +106,13 @@ public class BinaryTree {
         return heigth;
     }
 
+    int minHeight(Node v) {
+        if (v == null) {
+            return -1;
+        }
+        return 1 + Math.min(minHeight(v.leftChild), minHeight(v.rightChild));
+    }
+
     public static int findDepth(Node n) {
         if (n == null) {
             return -1;
@@ -94,6 +120,8 @@ public class BinaryTree {
         return 1 + findDepth(n.parent);
     }
 
+    //************************************************ */
+    ///Printing the tree
     public static String levelOrderToString(Node root) {
         if (root == null) {
             return "";
@@ -109,26 +137,43 @@ public class BinaryTree {
             while (currentLevelSize > 0) {
                 Node current = queue.poll();
                 // System.out.println("Current: " + current.data);
-                // System.out.println("teller: " + teller);
-                // System.out.println("Current depth: " + findDepth(current));
-                // System.out.println("Current heigth: " + findHeight(current));
+                // // System.out.println("Current depth: " + findDepth(current));
+                // // // System.out.println("Current heigth: " + findHeight(current));
+                // // int potens = findHeight(root) - findDepth(current);
+                // // System.out.println("Current: " + potens);
 
-                String spaces = "";
-                int rom = (int) (Math.pow(2, findHeight(root) - findDepth(current)));
-                for (int i = 0; i < rom; i++) {
-                    spaces += "__";
-                }
+                // // String spaces = "";
+                // // int rom = (int) (Math.pow(2, findHeight(root) - findDepth(current)));
+                // // for (int i = 0; i < rom; i++) {
+                // //     spaces += "__";
+                // // }
 
-                  if (current != root && current.parent.leftChild == null && current.parent.rightChild != null) {
-                    result.append(spaces + " " + spaces + " ");
-                }
-                 if (current != root && current.parent.leftChild != null && current.parent.rightChild == null) {
-                    result.append(spaces + " " + spaces + " ");
-                }
-    
-                result.append(spaces + current.data + spaces + " ");
+                // if (current.parent != null && current.parent.leftChild == null && current.parent.rightChild != null) {
+                //     result.append(spaces + " " + spaces + " ");
+                // }
+                // if (current.parent != null && current.parent.leftChild != null && current.parent.rightChild == null) {
+                //     result.append(spaces + " " + spaces + " ");
+                // }
+                // if (current.parent != null && current.parent.parent != null && current == current.parent.leftChild) {
+                //     if (current.parent.parent.leftChild == null) {
+                //         result.append(spaces + " " + spaces + " ");
+                //     }
+                // }
 
-              
+                // if (current.parent != null && current.parent.parent != null && current.parent.parent.parent != null
+                //         && current == current.parent.leftChild) {
+                //     if (current.parent.parent.parent.leftChild == null) {
+                //         result.append(spaces + " " + spaces + " " + spaces + " " + spaces + " ");
+                //     }
+                // }
+
+                // // if (current.parent != null && current.parent.parent != null && current.parent.parent.parent != null
+                //         && current == current.parent.rightChild &&  current.parent.leftChild == null) {
+                //     if (current.parent.parent.parent.leftChild == null) {
+                //         result.append(spaces + " " + spaces + " " + spaces + " " + spaces + " " + spaces + " " + spaces + " " + spaces + " " + spaces + " ");
+                //     }
+                // }
+                result.append(current.data + " ");
 
                 if (current.leftChild != null) {
                     queue.offer(current.leftChild);
@@ -138,6 +183,7 @@ public class BinaryTree {
                     queue.offer(current.rightChild);
 
                 }
+                
                 currentLevelSize--;
 
                 if (currentLevelSize > 0) {
