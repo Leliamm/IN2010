@@ -30,7 +30,8 @@ public class AVLTree extends BinaryTree {
         y.leftChild = z;
         z.rightChild = t1;
         z.parent = y;
-        if(z==root) root=y;
+        if (z == root)
+            root = y;
 
         System.out.print("Left rotate: " + levelOrderToString(root));
         return y;
@@ -43,7 +44,8 @@ public class AVLTree extends BinaryTree {
         y.rightChild = z;
         z.leftChild = t2;
         z.parent = y;
-        if(z==root) root=y;
+        if (z == root)
+            root = y;
         System.out.print("Rigth rotate: " + levelOrderToString(root));
         return y;
     }
@@ -62,13 +64,23 @@ public class AVLTree extends BinaryTree {
         }
 
         if (balanceFactor > 1) {
-                if (getBalanceFactor(n.leftChild) < 0) {
-                    n.leftChild = leftRotate(n.leftChild);
-                }
-                return rightRotate(n);
+            if (getBalanceFactor(n.leftChild) < 0) {
+                n.leftChild = leftRotate(n.leftChild);
             }
-            
+            return rightRotate(n);
+        }
+
         return n;
+    }
+
+    @Override
+    public void insert(int value) {
+        size++;
+        if (root == null) {
+            root = new Node(value);
+        } else {
+            insertAVL(null, root, value);
+        }
     }
 
     public Node insertAVL(Node parent, Node n, int value) {
@@ -84,17 +96,32 @@ public class AVLTree extends BinaryTree {
     }
 
     @Override
-    public void insert(int value) {
-        size++;
-        if (root == null) {
-            root = new Node(value);
-        } else {
-            insertAVL(null, root, value);
-        }
-    }
+    public Node removeValue(Node parent, Node n, int value) {
 
-    public void delete(int value) {
-        // Implement delete operation here
+        if (n == null)
+            return null;
+        if (size == 0) {
+            root = null;
+            return null;
+        }
+        if (value < n.data) {
+            n.leftChild = removeValue(n, n.leftChild, value);
+            return balanceTree(n);
+        }
+        if (value > n.data) {
+            n.rightChild = removeValue(n, n.rightChild, value);
+            return balanceTree(n);
+        }
+
+        if (n.leftChild == null)
+            return n.rightChild;
+        if (n.rightChild == null)
+            return n.leftChild;
+
+        Node min = findMin(n.rightChild);
+        n.data = min.data;
+        n.rightChild = removeValue(n, n.rightChild, min.data);
+        return balanceTree(n);
     }
 
     public void traverse(Node root) {

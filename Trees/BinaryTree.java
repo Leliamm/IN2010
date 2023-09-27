@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -6,15 +5,23 @@ public class BinaryTree {
     Node root;
     int size;
     int heigthTree = findHeight(root);
-    int heigthNode;
-    ArrayList<Node> nodes = new ArrayList<>();
+    int heigth;
 
     public BinaryTree() {
         root = null;
         size = 0;
     }
 
-    public Node insertNode(Node parent, Node n, int value) {
+    public void insert(int value) {
+        if (root == null) {
+            root = new Node(value);
+            size++;
+        } else {
+            insertNode(null, root, value);
+        }
+    }
+
+    private Node insertNode(Node parent, Node n, int value) {
         if (n == null) {
             n = new Node(value);
             n.parent = parent;
@@ -27,26 +34,24 @@ public class BinaryTree {
         return n;
     }
 
-    public void insert(int value) {
-        if (root == null) {
-            root = new Node(value);
-            size++;
-        } else {
-            insertNode(null, root, value);
-        }
+
+        public boolean contains(int value) {
+           return containsValue(root, value);
     }
 
-    public boolean contains(Node n, int value) {
+    private boolean containsValue(Node n, int value) {
         if (n == null)
             return false;
         if (n.data == value)
             return true;
         if (value < n.data) {
-            return contains(n.leftChild, value);
+            return containsValue(n.leftChild, value);
         } else {
-            return contains(n.rightChild, value);
+            return containsValue(n.rightChild, value);
         }
     }
+
+
 
     public Node findMin(Node n) {
         while (n.leftChild != null) {
@@ -56,14 +61,14 @@ public class BinaryTree {
         return n;
     }
 
-    public Node removeInt(int i) {
-        if (!contains(root, i))
+    public Node remove(int i) {
+        if (!contains(i))
             return null;
         size--;
-        return remove(null, root, i);
+        return removeValue(null, root, i);
     }
 
-    public Node remove(Node parent, Node n, int value) {
+    public Node removeValue(Node parent, Node n, int value) {
         if (n == null)
             return null;
         if (size == 0) {
@@ -71,11 +76,11 @@ public class BinaryTree {
             return null;
         }
         if (value < n.data) {
-            n.leftChild = remove(n, n.leftChild, value);
+            n.leftChild = removeValue(n, n.leftChild, value);
             return n;
         }
         if (value > n.data) {
-            n.rightChild = remove(n, n.rightChild, value);
+            n.rightChild = removeValue(n, n.rightChild, value);
             return n;
         }
 
@@ -86,7 +91,7 @@ public class BinaryTree {
 
         Node min = findMin(n.rightChild);
         n.data = min.data;
-        n.rightChild = remove(n, n.rightChild, min.data);
+        n.rightChild = removeValue(n, n.rightChild, min.data);
         return n;
     }
 
@@ -95,7 +100,7 @@ public class BinaryTree {
     }
 
     public static int findHeight(Node n) {
-        int heigth = -1;
+       int heigth = -1;
         if (n == null)
             return heigth;
         else {

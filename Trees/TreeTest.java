@@ -21,11 +21,11 @@ public class TreeTest {
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
                 System.out.println("Size:" + tree.size);
 
-                tree.removeInt(15);
+                tree.remove(15);
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
                 System.out.println("Size:" + tree.size);
 
-                tree.removeInt(16);
+                tree.remove(16);
 
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
                 System.out.println("Size:" + tree.size);
@@ -35,10 +35,10 @@ public class TreeTest {
                  System.out.println("sISTE:" + tree.root.rightChild.leftChild.rightChild);
 
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
-                tree.removeInt(1);
+                tree.remove(1);
                 System.out.println("Fjern noe som ikke finnes:" + tree.size);
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
-                tree.removeInt(22);
+                tree.remove(22);
                 System.out.println("Size:" + tree.size);
                 System.out.println(BinaryTree.levelOrderToString(tree.root));
                 
@@ -52,7 +52,7 @@ public class TreeTest {
                  System.out.println("Root høyre barn:" + test.root.leftChild);
 
                 System.out.println("REMOVE:");
-                test.removeInt(2);
+                test.remove(2);
                 System.out.println(BinaryTree.levelOrderToString(test.root));
                 System.out.println("Size:" + test.size);
                 System.out.println("Root:" + test.root);
@@ -131,6 +131,32 @@ public class TreeTest {
                 AVL.insert(111);
                 System.out.println("Size "+ AVL.findSize());
                 System.out.println(BinaryTree.levelOrderToString(AVL.root));
+
+                 System.out.println("TEST add 112:");
+                AVL.insert(112);
+                System.out.println("Size "+ AVL.findSize());
+                System.out.println(BinaryTree.levelOrderToString(AVL.root));
+
+
+                System.out.println("REMOVE 5:");
+                AVL.remove(5);
+                System.out.println("Size "+ AVL.findSize());
+                System.out.println(BinaryTree.levelOrderToString(AVL.root));
+
+                System.out.println("REMOVE 100:");
+                AVL.remove(100);
+                System.out.println("Size "+ AVL.findSize());
+                System.out.println(BinaryTree.levelOrderToString(AVL.root));
+
+                System.out.println("REMOVE 110:");
+                AVL.remove(11-0);
+                System.out.println("Size "+ AVL.findSize());
+                System.out.println(BinaryTree.levelOrderToString(AVL.root));
+
+                System.out.println("Contains 1? " + AVL.contains(1)); 
+                System.out.println("Contains 112? " + AVL.contains(112)); 
+
+                
                 
 
                 // Les input og utfør operasjoner på treet her
