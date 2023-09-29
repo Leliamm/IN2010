@@ -13,12 +13,15 @@ public class BinaryTree {
     }
 
     public void insert(int value) {
-        if (root == null) {
-            root = new Node(value);
-            size++;
-        } else {
-            insertNode(null, root, value);
-        }
+        if (contains(value))
+            return;
+        root = insertNode(null, root, value);
+        // if (root == null) {
+        //     root = new Node(value);
+        //     size++;
+        // } else {
+        //     insertNode(null, root, value);
+        // }
     }
 
     private Node insertNode(Node parent, Node n, int value) {
@@ -31,12 +34,12 @@ public class BinaryTree {
         } else if (value > n.data) {
             n.rightChild = insertNode(n, n.rightChild, value);
         }
+
         return n;
     }
 
-
-        public boolean contains(int value) {
-           return containsValue(root, value);
+    public boolean contains(int value) {
+        return containsValue(root, value);
     }
 
     private boolean containsValue(Node n, int value) {
@@ -51,21 +54,19 @@ public class BinaryTree {
         }
     }
 
-
-
     public Node findMin(Node n) {
         while (n.leftChild != null) {
             n = n.leftChild;
         }
-        System.out.println("minst er nå: " + n);
+        // System.out.println("minst er nå: " + n);
         return n;
     }
 
-    public Node remove(int i) {
+    public void remove(int i) {
         if (!contains(i))
-            return null;
+            return;
         size--;
-        return removeValue(null, root, i);
+        root = removeValue(null, root, i);
     }
 
     public Node removeValue(Node parent, Node n, int value) {
@@ -74,6 +75,15 @@ public class BinaryTree {
         if (size == 0) {
             root = null;
             return null;
+        }
+        if (root.data == value) {
+            if (n.rightChild != null) {
+                root = n.rightChild;
+            } else if (n.leftChild != null && n.rightChild == null) {
+                root = n.leftChild;
+            } else {
+                System.out.println("Her har noe gått gærent");
+            }
         }
         if (value < n.data) {
             n.leftChild = removeValue(n, n.leftChild, value);
@@ -95,12 +105,12 @@ public class BinaryTree {
         return n;
     }
 
-    public int findSize(){
+    public int findSize() {
         return size;
     }
 
     public static int findHeight(Node n) {
-       int heigth = -1;
+        int heigth = -1;
         if (n == null)
             return heigth;
         else {
@@ -188,7 +198,7 @@ public class BinaryTree {
                     queue.offer(current.rightChild);
 
                 }
-                
+
                 currentLevelSize--;
 
                 if (currentLevelSize > 0) {

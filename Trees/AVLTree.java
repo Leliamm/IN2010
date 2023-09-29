@@ -33,7 +33,7 @@ public class AVLTree extends BinaryTree {
         if (z == root)
             root = y;
 
-        System.out.print("Left rotate: " + levelOrderToString(root));
+        // System.out.print("Left rotate: " + levelOrderToString(root));
         return y;
     }
 
@@ -46,19 +46,19 @@ public class AVLTree extends BinaryTree {
         z.parent = y;
         if (z == root)
             root = y;
-        System.out.print("Rigth rotate: " + levelOrderToString(root));
+        // System.out.print("Rigth rotate: " + levelOrderToString(root));
         return y;
     }
 
     private Node balanceTree(Node n) {
         int balanceFactor = getBalanceFactor(n);
-        System.out.println("balance factor " + balanceFactor);
+        // System.out.println("balance factor " + balanceFactor);
 
         if (balanceFactor < -1) {
             if (getBalanceFactor(n.rightChild) > 0) {
                 n.rightChild = rightRotate(n.rightChild);
             }
-            System.out.println("noden jeg sender til left rotate er: " + n);
+            // System.out.println("noden jeg sender til left rotate er: " + n);
 
             return leftRotate(n);
         }
@@ -75,18 +75,16 @@ public class AVLTree extends BinaryTree {
 
     @Override
     public void insert(int value) {
-        size++;
-        if (root == null) {
-            root = new Node(value);
-        } else {
-            insertAVL(null, root, value);
-        }
+        if (contains(value))
+            return;
+        root = insertAVL(null, root, value);
     }
 
     public Node insertAVL(Node parent, Node n, int value) {
         if (n == null) {
             n = new Node(value);
             n.parent = parent;
+            size++;
         } else if (value < n.data) {
             n.leftChild = insertAVL(n, n.leftChild, value);
         } else {
