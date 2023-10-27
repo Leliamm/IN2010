@@ -14,8 +14,7 @@ class Node {
         this.naboer = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
+    public String naboString() {
         StringBuilder penStr = new StringBuilder(data + ": [");
         if (!naboer.isEmpty()) {
             for (Node kant : naboer) {
@@ -25,27 +24,74 @@ class Node {
         }
         return penStr + "]";
     }
+
+    @Override
+    public String toString() {
+        return this.data;
+    }
+}
+
+class Edge implements Comparable<Edge> {
+    Node n, v;
+    int vekt;
+
+    public Edge(Node n, Node v, int vekt) {
+        this.n = n;
+        this.v = v;
+        this.vekt = vekt;
+    }
+
+    public Edge(Node n, Node v) {
+        this.n = n;
+        this.v = v;
+    }
+
+          @Override
+        public int compareTo(Edge e) {
+            return e.vekt - this.vekt;
+        }
+
 }
 
 class Graph {
-    Map<String, Node> graf;
+    Map<Node, Edge> graf;
+    int nodes, edges;
     boolean rettet;
+    boolean vektet;
 
-    public Graph(boolean rettet) {
+    public Graph(boolean rettet, boolean vektet) {
         this.graf = new HashMap<>();
         this.rettet = rettet;
+        this.vektet = vektet;
     }
 
-    public void leggTilKant(String u, String v) {
+    public void leggTilEdge(Node u, Node v) {
         Node uNode = hentNode(u);
         Node vNode = hentNode(v);
-
+        Edge egde = new Edge(uNode, vNode);
         if (rettet) {
             uNode.naboer.add(vNode);
             vNode.inDeg++;
         } else {
             uNode.naboer.add(vNode);
             vNode.naboer.add(uNode);
+        }
+
+    }
+
+    public void leggTilEdge(Node u, Node v, int vekt) {
+        Node uNode = hentNode(u);
+        Node vNode = hentNode(v);
+        Edge edge = new Edge(uNode, vNode, vekt);
+
+        if (rettet) {
+            uNode.naboer.add(vNode);
+            vNode.inDeg++;
+            edges++;
+        } else {
+            uNode.naboer.add(vNode);
+            vNode.naboer.add(uNode);
+            edges = edges + 2;
         }
     }
 
@@ -54,28 +100,26 @@ class Graph {
     }
 
     public int edgeCount() {
-        int edges = 0;
-        for (String s : graf.keySet()) {
-            Node node = graf.get(s);
-            for (Node n : node.naboer) {
-                edges++;
-            }
-        }
-        if (rettet) {
-            edges = edges / 2;
-        }
         return edges;
     }
 
-    public Node hentNode(String data) {
-        if (!graf.containsKey(data)) {
-            graf.put(data, new Node(data));
+    public Node hentNode(Node n) {
+        if (!graf.containsKey(n)) {
+            graf.put(n, null);
         }
-        return graf.get(data);
+        return n;
+    }
+
+    public void addNode(String data) {
+        if (!graf.containsKey(data)) {
+            graf.put(new Node(data), null);
+        } else {
+            System.out.println("The graph already contains a node " + data);
+        }
     }
 
     public void settNoderUbesokt() {
-        for (Node node : graf.values()) {
+        for (Node node : graf.keySet()) {
             node.visited = false;
         }
     }
@@ -83,8 +127,7 @@ class Graph {
     // Depth first search
     public ArrayList<Node> DFSFull() {
         ArrayList<Node> visitedNodes = new ArrayList<Node>();
-        for (String s : graf.keySet()) {
-            Node n = graf.get(s);
+        for (Node n : graf.keySet()) {
             if (!n.visited) {
                 DFSVisit(n, visitedNodes);
             }
@@ -107,8 +150,7 @@ class Graph {
     public Stack<Node> DFSFullIter() {
         Stack<Node> dfsIter = new Stack<>();
 
-        for (String s : graf.keySet()) {
-            Node n = graf.get(s);
+        for (Node n : graf.keySet()) {
             if (!n.visited) {
                 DFSVisitIter(n, dfsIter);
             }
@@ -144,83 +186,124 @@ class Graph {
     }
 
     // Bredde først søk
-    public ArrayList<Node> BFSFull(){
+    public ArrayList<Node> BFSFull() {
         ArrayList<Node> breddeNodes = new ArrayList<>();
-        for(String s : graf.keySet()){
-            Node n = graf.get(s);
-            if(!n.visited){
+        for (Node n : graf.keySet()) {
+            if (!n.visited) {
                 BFSVisit(n, breddeNodes);
             }
         }
         return breddeNodes;
 
-}
+    }
 
-public void BFSVisit(Node n, ArrayList<Node> breddeNodes){
-    Stack<Node> stack = new Stack<Node>();
-    stack.add(n);
-    n.visited = true;
-    while(!stack.isEmpty()){
-        Node s = stack.pop();
-        for( Node nb : s.naboer){
-            if(!nb.visited){
-                nb.visited = true;
-                breddeNodes.add(nb);
-                stack.push(nb);
+    public void BFSVisit(Node n, ArrayList<Node> breddeNodes) {
+        Stack<Node> stack = new Stack<Node>();
+        stack.add(n);
+        n.visited = true;
+        while (!stack.isEmpty()) {
+            Node s = stack.pop();
+            for (Node nb : s.naboer) {
+                if (!nb.visited) {
+                    nb.visited = true;
+                    breddeNodes.add(nb);
+                    stack.push(nb);
 
+                }
             }
         }
+
     }
 
+    public ArrayList<String> visitFraTil(Node fra, Node til) {
+        settNoderUbesokt();
+        Stack<Node> stack = new Stack<>();
+        ArrayList<String> pathList = new ArrayList<>();
+        stack.push(fra);
+        System.out.println("Naboer: " + fra.naboer);
 
-}
+        while (!stack.isEmpty()) {
+            Node s = stack.pop();
+             System.out.println("S er nå: " + s);
+            s.visited = true;
+            for (Node f : s.naboer) {
+                 System.out.println("F er nå: " + f);
+                    if (f == til) {
+                        pathList.add(" ---> " + f.toString() + " ");
+                        return pathList;
+                    }
+                    if (!f.visited) {
+                        f.visited = true;
+                        stack.push(f);
+                        pathList.add(" ==> " + f.toString() + " ");
+                    }
+                }
+            }
+        
+        Collections.reverse(pathList);
+        System.out.println("Shortest path fra " + fra.toString() + " til " + til.toString());
+        return pathList;
+
+    }
+    public String sorthestPath(Node from, Node to) {
+        StringBuilder result = new StringBuilder();
+        ArrayList<String> path = visitFraTil(from, to);
+        result.append(from.toString() + "---> ");
+        for (String s : path) {
+            result.append(s);
+        }
+        return result.toString();
+    }
+
     //topological sorting 
-public ArrayList<Node> topSort() throws Exception{
-    ArrayList<Node> topologicalSort = new ArrayList<>();
-    Stack<Node> topoStack = new Stack<Node>();
-    for(String s : graf.keySet()){
-        Node n = graf.get(s);
-       if(n.inDeg == 0) topoStack.push(n);
-    }
-    while(!topoStack.isEmpty()){
-        Node u = topoStack.pop();
-        topologicalSort.add(u);
-        for(Node n : u.naboer){
-            u.naboer.remove(n);
-            if(n.inDeg == 0) topoStack.push(n);
+    public ArrayList<Node> topSort() throws Exception {
+        ArrayList<Node> topologicalSort = new ArrayList<>();
+        Stack<Node> topoStack = new Stack<Node>();
+        for (Node n : graf.keySet()) {
+            if (n.inDeg == 0)
+                topoStack.push(n);
         }
-    }
-
-    System.out.println("Array size" + topologicalSort.size());
-    System.out.println("Total nodes in graph: " + nodeCount());
-    if(topologicalSort.size() < nodeCount()) throw new RuntimeException("The graph contains a cycle.");
-
-    return topologicalSort;
-}
-
-//Topological sorting with DFS
-
-public Stack<Node> DFSTopSort(){
-    Stack<Node> stack = new Stack<>();
-    for(String s : graf.keySet()){
-        Node n = graf.get(s);
-        if(!n.visited){
-            DFSVisitB(n, stack);
+        while (!topoStack.isEmpty()) {
+            Node u = topoStack.pop();
+            topologicalSort.add(u);
+            for (Node n : u.naboer) {
+                u.naboer.remove(n);
+                if (n.inDeg == 0)
+                    topoStack.push(n);
+            }
         }
-    }
-    return stack;
-}
 
-public void  DFSVisitB(Node n, Stack <Node> stack){
-    n.visited = true;
-    for(Node nb : n.naboer){
-        if(!nb.visited){
-            DFSVisitB(nb, stack);
+        System.out.println("Array size" + topologicalSort.size());
+        System.out.println("Total nodes in graph: " + nodeCount());
+        if (topologicalSort.size() < nodeCount())
+            throw new RuntimeException("The graph contains a cycle.");
+
+        return topologicalSort;
+    }
+
+    //Topological sorting with DFS
+
+    public Stack<Node> DFSTopSort() {
+        Stack<Node> stack = new Stack<>();
+        for (Node n : graf.keySet()) {
+            if (!n.visited) {
+                DFSVisitB(n, stack);
+            }
         }
+        return stack;
     }
-    stack.push(n);
 
-}
+    public void DFSVisitB(Node n, Stack<Node> stack) {
+        n.visited = true;
+        for (Node nb : n.naboer) {
+            if (!nb.visited) {
+                DFSVisitB(nb, stack);
+            }
+        }
+        stack.push(n);
+
+    }
+
     //sett farge på node
     public String settFarge(Node n) {
 
@@ -252,8 +335,8 @@ public void  DFSVisitB(Node n, Stack <Node> stack){
     @Override
     public String toString() {
         StringBuilder penStr = new StringBuilder();
-        for (String v : graf.keySet()) {
-            penStr.append(graf.get(v)).append("\n");
+        for (Node n : graf.keySet()) {
+            penStr.append(n.toString()).append("\n");
         }
         return penStr.toString();
     }

@@ -1,22 +1,32 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class GraphTTest {
+public class GraphTest {
     public static void main(String[] args) throws Exception {
 
-        Graph graf = new Graph(false);
-        graf.leggTilKant("A", "D");
-        graf.leggTilKant("E", "F");
-        graf.leggTilKant("D", "E");
-        graf.leggTilKant("F", "G");
-        graf.leggTilKant("A", "B");
-        graf.leggTilKant("A", "C");
-        graf.leggTilKant("B", "C");
-        graf.leggTilKant("C", "D");
-        graf.leggTilKant("C", "F");
-        graf.leggTilKant("X", "Y");
-        graf.leggTilKant("X", "Z");
-        graf.leggTilKant("Y", "Z");
+        Graph graf = new Graph(false, false);
+        Node A = new Node("A");
+        Node B = new Node("B");
+        Node C = new Node("C");
+        Node D = new Node("D");
+        Node E = new Node("E");
+        Node F = new Node("F");
+        Node G = new Node("H");
+        Node H = new Node("I");
+        Node J = new Node("J");
+        Node K = new Node("K");
+        graf.leggTilEdge(A, D);
+        graf.leggTilEdge(E, F);
+        graf.leggTilEdge(D, E);
+        graf.leggTilEdge(F, G);
+        graf.leggTilEdge(A, B);
+        graf.leggTilEdge(A, C);
+        graf.leggTilEdge(B, C);
+        graf.leggTilEdge(C, D);
+        graf.leggTilEdge(C, F);
+        graf.leggTilEdge(H, J);
+        graf.leggTilEdge(H, K);
+        graf.leggTilEdge(J, K);
         System.out.println(graf);
 
         // Call DFS here...
@@ -34,13 +44,17 @@ public class GraphTTest {
         ArrayList<Node> BFSFull = graf.BFSFull();
         System.out.println("\n---( Calling BFS )---" + BFSFull);
 
-        Graph morgen = new Graph(true);
-        morgen.leggTilKant("A", "D");
-        morgen.leggTilKant("A", "C");
-        morgen.leggTilKant("C", "H");
-        morgen.leggTilKant("C", "G");
-        morgen.leggTilKant("D", "E");
-        morgen.leggTilKant("E", "F");
+        //call shortest path
+        System.out.println("\n---( Calling shortest path )---");
+        System.out.println(graf.sorthestPath(A, F));
+
+        Graph morgen = new Graph(true, false);
+        graf.leggTilEdge(A, D);
+        graf.leggTilEdge(E, F);
+        graf.leggTilEdge(D, E);
+        graf.leggTilEdge(F, G);
+        graf.leggTilEdge(A, B);
+        graf.leggTilEdge(A, C);
         System.out.println("Rettet graf: " + morgen);
 
         // ArrayList<Node> topologicalSort = morgen.topSort();
@@ -48,10 +62,8 @@ public class GraphTTest {
         // // Call topological sorting here...
 
         morgen.settNoderUbesokt();
-        Stack<Node> DFSTopSort  = morgen.DFSTopSort();
+        Stack<Node> DFSTopSort = morgen.DFSTopSort();
         System.out.println("\n---( Calling DFSTopSort )---" + DFSTopSort);
-
-
 
         // Object of graph is created.
         GraphT<Integer> g = new GraphT<Integer>();
@@ -82,6 +94,10 @@ public class GraphTTest {
 
         // Tells whether vertex is present or not
         g.hasVertex(5);
+    }
+
+    private static Node addNode(String string) {
+        return null;
     }
 
 }
