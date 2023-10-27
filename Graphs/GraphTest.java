@@ -44,8 +44,13 @@ public class GraphTest {
         ArrayList<Node> BFSFull = graf.BFSFull();
         System.out.println("\n---( Calling BFS )---" + BFSFull);
 
+           //call shortest path
+        System.out.println("\n---( Calling path from to )---");
+        System.out.println(graf.pathFraTil(A, F));
+
+
         //call shortest path
-        System.out.println("\n---( Calling shortest path )---");
+        System.out.println("\n---( Calling shortest path from to )---");
         System.out.println(graf.sorthestPath(A, F));
 
         Graph morgen = new Graph(true, false);

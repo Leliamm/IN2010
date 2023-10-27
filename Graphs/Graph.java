@@ -46,10 +46,10 @@ class Edge implements Comparable<Edge> {
         this.v = v;
     }
 
-          @Override
-        public int compareTo(Edge e) {
-            return e.vekt - this.vekt;
-        }
+    @Override
+    public int compareTo(Edge e) {
+        return e.vekt - this.vekt;
+    }
 
 }
 
@@ -122,6 +122,27 @@ class Graph {
         for (Node node : graf.keySet()) {
             node.visited = false;
         }
+    }
+
+    //find parent nodes
+
+    public HashMap<Node, Node> parents(Node n) {
+        HashMap<Node, Node> parents = new HashMap<>();
+        parents.put(n, null);
+        Deque<Node> queue = new ArrayDeque<>();
+        queue.offer(n);
+
+        while (!queue.isEmpty()) {
+            Node u = queue.poll();
+            for (Node v : u.naboer) {
+                if (!parents.containsKey(v)) {
+                    parents.put(v, u);
+                    queue.offer(v);
+                }
+            }
+        }
+
+        return parents;
     }
 
     // Depth first search
@@ -220,34 +241,65 @@ class Graph {
         Stack<Node> stack = new Stack<>();
         ArrayList<String> pathList = new ArrayList<>();
         stack.push(fra);
-        System.out.println("Naboer: " + fra.naboer);
 
         while (!stack.isEmpty()) {
             Node s = stack.pop();
-             System.out.println("S er nå: " + s);
             s.visited = true;
             for (Node f : s.naboer) {
-                 System.out.println("F er nå: " + f);
-                    if (f == til) {
-                        pathList.add(" ---> " + f.toString() + " ");
-                        return pathList;
-                    }
-                    if (!f.visited) {
-                        f.visited = true;
-                        stack.push(f);
-                        pathList.add(" ==> " + f.toString() + " ");
-                    }
+                if (f == til) {
+                    pathList.add(" ==> " + f.toString() + " ");
+                    return pathList;
+                }
+                if (!f.visited) {
+                    f.visited = true;
+                    stack.push(f);
+                    pathList.add(" ==> " + f.toString() + " ");
                 }
             }
-        
+        }
+
         Collections.reverse(pathList);
         System.out.println("Shortest path fra " + fra.toString() + " til " + til.toString());
         return pathList;
 
     }
-    public String sorthestPath(Node from, Node to) {
+
+    public ArrayList<String> shortestPathFraTil(Node fra, Node til) {
+         settNoderUbesokt();
+        Map<Node, Node> parents = parents(fra);
+        Node v = til;
+        List<Node> path = new ArrayList<>();
+        ArrayList<String> pathString = new ArrayList<>();
+
+        if (!parents.containsKey(til)) {
+            return pathString;
+        }
+
+        while (v != null) {
+            path.add(v);
+            if(v!=fra)
+            pathString.add("==> " + v);
+            v = parents.get(v);
+        }
+
+        Collections.reverse(pathString);
+        return pathString ;
+
+    }
+
+    public String pathFraTil(Node from, Node to) {
         StringBuilder result = new StringBuilder();
         ArrayList<String> path = visitFraTil(from, to);
+        result.append(from.toString() + "---> ");
+        for (String s : path) {
+            result.append(s);
+        }
+        return result.toString();
+    }
+
+    public String sorthestPath(Node from, Node to) {
+        StringBuilder result = new StringBuilder();
+        List<String> path = shortestPathFraTil(from, to);
         result.append(from.toString() + "---> ");
         for (String s : path) {
             result.append(s);
