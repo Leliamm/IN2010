@@ -9,6 +9,18 @@ public class Trie {
         root = new Node(' ');
     }
 
+    public Trie(String word) {
+        root = new Node(' ');
+        insert(word);
+    }
+
+    public Trie(ArrayList<String> words) {
+        root = new Node(' ');
+        for (String word : words) {
+            insert(word);
+        }
+    }
+
     private class Node {
         private char value;
         private HashMap<Character, Node> children;
@@ -83,6 +95,24 @@ public class Trie {
         return current.isEndOfWord;
     }
 
+    public boolean containsRecursive(String word) {
+        if (word == null)
+            return false;
+        return containsRecursive(word, root, 0);
+    }
+
+    private boolean containsRecursive(String word, Node root, int index) {
+
+        if (index == word.length())
+            return root.isEndOfWord;
+        if (root == null)
+            return false;
+
+        char ch = word.charAt(index);
+        root = root.getChild(ch);
+        return containsRecursive(word, root, index + 1);
+    }
+
     //Pre order traversal
     public void traversePre() {
         traversePre(root);
@@ -107,6 +137,21 @@ public class Trie {
         }
         System.out.println(root.value);
 
+    }
+
+    public int countWords() {
+        return countWords(root);
+    }
+
+    private int countWords(Node root) {
+        int totalWords = 0;
+        if (root.isEndOfWord)
+            totalWords++;
+
+        for (Node n : root.getChildren()) {
+            totalWords += countWords(n);
+        }
+        return totalWords;
     }
 
     public void remove(String word) {
@@ -143,9 +188,10 @@ public class Trie {
         return current;
     }
 
-    public List<String> autocompletion(String prefix) {
-        if(prefix == null) return null;
-        List<String> words = new ArrayList<>();
+    public ArrayList<String> findWords(String prefix) {
+        if (prefix == null)
+            return null;
+        ArrayList<String> words = new ArrayList<>();
         Node lastNode = findLastNodeOF(prefix);
         findwords(lastNode, prefix, words);
         return words;
@@ -153,7 +199,8 @@ public class Trie {
     }
 
     private void findwords(Node root, String prefix, List<String> words) {
-        if(root == null) return;
+        if (root == null)
+            return;
         if (root.isEndOfWord)
             words.add(prefix);
 
@@ -162,4 +209,65 @@ public class Trie {
         }
     }
 
+    public ArrayList<String> trieToList() {
+        return findWords("");
+    }
+
+    //finds first shortest word aphabetically.
+    public String getShortest() {
+        return getShortest(trieToList());
+    }
+
+    private static String getShortest(ArrayList<String> words) {
+        if (words == null || words.size() == 0)
+            return "";
+        String shortestWord = words.get(0);
+        for (String word : words) {
+            if (shortestWord.length() > word.length()) {
+                shortestWord = word;
+            }
+        }
+        return shortestWord;
+
+    }
+
+    public static String longestCommonPrefix(ArrayList<String> listOfWords) {
+        if (listOfWords == null)
+            return "";
+        Trie trie = new Trie(listOfWords);
+        Node root = trie.root;
+        return longestCommonPrefix(root, listOfWords);
+    }
+
+    private static String longestCommonPrefix(Node root, ArrayList<String> listOfWords) {
+        String commonPrefix = "";
+        int maxLength = getShortest(listOfWords).length();
+        while (commonPrefix.length() < maxLength) {
+            Node[] children = root.getChildren();
+            if (children.length != 1)
+                break;
+            root = children[0];
+            commonPrefix += root.value;
+        }
+        return commonPrefix;
+    }
+
+    public String longestCommonPrefix() {
+        return longestCommonPrefix(root);
+    }
+
+    private String longestCommonPrefix(Node root) {
+        String commonPrefix = "";
+        int maxLength = getShortest().length();
+        Node current = root;
+
+        while (commonPrefix.length() < maxLength) {
+            Node[] children = current.getChildren();
+            if (children.length != 1)
+                break;
+            current = children[0];
+            commonPrefix += current.value;
+        }
+        return commonPrefix;
+    }
 }
