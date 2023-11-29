@@ -92,9 +92,20 @@ public class HashMapping {
                 count++;
             set.remove(number);
         }
-
         // Time complexity of this method is O(n).
-
         return count;
+    }
+
+    public int[] twoSum(int[] array, int sum) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int index = 0; index < array.length; index++) {
+            int compelent = sum - array[index];
+            if (map.containsKey(compelent))
+                return new int[] { map.get(compelent), index };
+
+            map.put(array[index], index);
+        }
+        return null;
     }
 }
