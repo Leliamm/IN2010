@@ -45,8 +45,8 @@ public class LiniarProbing {
         return null;
     }
 
-    private int getEntryIndex(int key){
-         int index = hashing(key);
+    private int getEntryIndex(int key) {
+        int index = hashing(key);
         int counting = 0;
         while (list[index] != null && counting <= size()) {
             if (list[index].key == key) {
@@ -88,18 +88,19 @@ public class LiniarProbing {
     }
 
     public void remove(int key) {
-        if (contains(key)) {
             int index = getEntryIndex(key);
+            if(index == -1) return;
             list[index] = null;
             elements--;
-        }
+
+
     }
 
     public int size() {
         return list.length;
     }
 
-     @Override
+    @Override
     public String toString() {
         return Arrays.toString(list);
     }

@@ -62,6 +62,7 @@ public class HashMappingTest {
         System.out.println("remove");
         System.out.println("contains true: " + liniarProbing.contains(6));
         liniarProbing.remove(6);
+        liniarProbing.remove(6);
         System.out.println("contains false: " + liniarProbing.contains(6));
 
     }
